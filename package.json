@@ -1,0 +1,10 @@
+{
+  "name": "vault-mcp",
+  "version": "1.0.0",
+  "description": "BIP39 mnemonic-based encrypted vault MCP server",
+  "type": "module",
+  "main": "index.js",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1"
+  }
+}
