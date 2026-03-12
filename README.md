@@ -196,6 +196,18 @@ sudo chflags noschg ~/.vault-mcp ~/.vault-mcp/*
 # 存完再锁回去
 ```
 
+**出事了怎么办？对照这张表：**
+
+| 出了什么事 | 怎么恢复 |
+|-----------|---------|
+| mcp.json 被删了 | 让 AI 执行 `vault_export` 拿回所有 key，手动填回 mcp.json |
+| 工作区被删了 | Skills 从 `~/proma-backups/skills-backup.tar.gz` 解压回去；vault 代码从 GitHub clone |
+| 换电脑 | 把 `~/.vault-mcp/` 和 `~/proma-backups/` 拷到新电脑，GitHub clone vault-mcp 代码，用助记词解锁 |
+| vault.enc 被删了 | 从 `~/proma-backups/vault.enc.bak` 拷回 `~/.vault-mcp/` |
+| 全没了（硬盘挂了） | 如果备份也没了，那就真没了。所以一定要把 `~/proma-backups/` 同步到 iCloud 或外部硬盘 |
+
+一句话：**助记词 + vault.enc = 恢复一切。两个都不能丢。**
+
 就这么简单。
 
 ## License
