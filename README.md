@@ -130,12 +130,73 @@ npm install
 5. 换机器 → 复制 ~/.vault-mcp/ 目录 + 助记词即可恢复
 ```
 
+## 安全加固（推荐）
+
+vault 数据存在 `~/.vault-mcp/`，不在工作区内，工作区被删不影响。但为了防止任何误操作（包括 AI Agent 的高频文件操作），建议加 macOS 不可变标志：
+
+```bash
+# 锁定（加完后任何人/程序都删不了，包括 AI Agent）
+sudo chflags schg ~/.vault-mcp/vault.enc
+sudo chflags schg ~/.vault-mcp/meta.json
+sudo chflags schg ~/.vault-mcp
+
+# 解锁（需要往 vault 存新东西时先解锁）
+sudo chflags noschg ~/.vault-mcp ~/.vault-mcp/*
+```
+
+另外建议定期备份 `~/.vault-mcp/` 到其他位置（iCloud、外部硬盘），双重保险。
+
 ## 未来扩展
 
 - [ ] HD 钱包派生（从同一助记词派生加密货币钱包地址）
 - [ ] 定时自动备份 mcp.json 到 vault
 - [ ] 恢复脚本（从 vault 自动填充 mcp.json 模板）
 - [ ] 多 vault 支持（不同助记词管理不同类别的密钥）
+
+---
+
+## 大白话版本：这玩意儿到底干嘛的？
+
+你让 AI 帮你干活，AI 需要用到各种密码和 key（飞书的、小红书的、搜索引擎的……）。这些密码一般都明文写在配置文件里。
+
+问题来了：**AI 干活的时候手速太快，万一把配置文件删了呢？** 或者你换了台电脑，之前那堆 key 去哪找？
+
+vault-mcp 就是个**加密保险箱**：
+
+1. 你跟它说"开个保险箱"，它给你 12 个英文单词（助记词）
+2. 你把所有密码、key 往里一丢，它用军用级加密锁起来
+3. 以后不管配置文件怎么丢、电脑怎么换，只要你记得那 12 个词，所有密码都能找回来
+
+**打个比方：**
+- 配置文件 = 你把所有银行卡密码写在便利贴上贴电脑旁边
+- vault-mcp = 你把密码锁进保险箱，钥匙（12个词）揣兜里
+
+**跟其他方案比：**
+- Doppler：要花钱买云服务，密码存别人服务器上
+- .env 文件：就是那张便利贴，谁都能看
+- macOS 钥匙串：只能 Mac 用，AI 还读不了
+- **vault-mcp：免费、本地、AI 能直接用、12 个词就是一切**
+
+**怎么用？三步：**
+
+```
+第一步：让 AI 执行 vault_init → 拿到 12 个词 → 抄纸上
+第二步：让 AI 把你的 key 都 vault_add 进去
+第三步：没了。该干嘛干嘛。出事了用那 12 个词恢复。
+```
+
+**进阶操作：**
+```bash
+# 给保险箱上把物理锁（连 AI 都删不了）
+sudo chflags schg ~/.vault-mcp/vault.enc
+sudo chflags schg ~/.vault-mcp/meta.json
+
+# 要存新东西？先开锁
+sudo chflags noschg ~/.vault-mcp ~/.vault-mcp/*
+# 存完再锁回去
+```
+
+就这么简单。
 
 ## License
 
